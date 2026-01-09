@@ -1,20 +1,17 @@
 package com.moodlens.ui.screens.login
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Mood
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.moodlens.R
 import com.moodlens.ui.components.LoadingButton
 
 @Composable
@@ -23,7 +20,7 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -31,23 +28,24 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // App Logo Placeholder
-        Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+
+        // App Icon Placeholder (NO R.drawable needed)
+        Icon(
+            imageVector = Icons.Filled.Mood,
             contentDescription = "App Logo",
-            modifier = Modifier.size(120.dp),
-            contentScale = ContentScale.Fit
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(96.dp)
         )
-        
+
         Spacer(modifier = Modifier.height(24.dp))
-        
+
         // Title
         Text(
             text = "MoodLens",
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.primary
         )
-        
+
         // Subtitle
         Text(
             text = "Track your mood. Grow daily.",
@@ -55,9 +53,9 @@ fun LoginScreen(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 8.dp)
         )
-        
+
         Spacer(modifier = Modifier.height(48.dp))
-        
+
         // Email Input
         OutlinedTextField(
             value = email,
@@ -75,15 +73,13 @@ fun LoginScreen(
             ),
             modifier = Modifier.fillMaxWidth()
         )
-        
+
         Spacer(modifier = Modifier.height(24.dp))
-        
+
         // Login Button
         LoadingButton(
             onClick = {
                 isLoading = true
-                // Simulate network call
-                // In a real app, you would call your auth service here
                 onLoginClick()
             },
             isLoading = isLoading,

@@ -7,13 +7,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 @Composable
 fun HistoryScreen() {
@@ -27,7 +27,7 @@ fun HistoryScreen() {
             MoodEntry("2023-10-28", "😣", "Tough day")
         )
     }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -37,10 +37,9 @@ fun HistoryScreen() {
         Text(
             text = "Your Mood History",
             style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(bottom = 24.dp)
         )
-        
+
         // Mood history list
         if (moodHistory.isEmpty()) {
             Box(
@@ -50,7 +49,7 @@ fun HistoryScreen() {
                 Text(
                     text = "No mood entries yet.\nCheck in with yourself!",
                     style = MaterialTheme.typography.bodyLarge,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -59,7 +58,7 @@ fun HistoryScreen() {
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(moodHistory) { entry ->
-                    MoodHistoryItem(entry)
+                    MoodHistoryItem(entry = entry)
                 }
             }
         }
@@ -70,8 +69,8 @@ fun HistoryScreen() {
 @Composable
 fun MoodHistoryItem(entry: MoodEntry) {
     Card(
-        onClick = { /* Handle click if needed */ },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { /* Optional click */ }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -83,10 +82,9 @@ fun MoodHistoryItem(entry: MoodEntry) {
                 style = MaterialTheme.typography.displaySmall,
                 modifier = Modifier.padding(end = 16.dp)
             )
-            
-            // Date and note
+
             Column {
-                // Formatted date
+                // Date row
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(bottom = 4.dp)
@@ -104,13 +102,12 @@ fun MoodHistoryItem(entry: MoodEntry) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                
+
                 // Note
                 if (entry.note.isNotEmpty()) {
                     Text(
                         text = entry.note,
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(top = 4.dp)
                     )
                 }
@@ -123,7 +120,7 @@ private fun formatDate(dateString: String): String {
     return try {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val date = inputFormat.parse(dateString) ?: return dateString
-        
+
         val outputFormat = SimpleDateFormat("EEEE, MMM d", Locale.getDefault())
         outputFormat.format(date)
     } catch (e: Exception) {

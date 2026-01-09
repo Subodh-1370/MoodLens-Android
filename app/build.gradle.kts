@@ -1,7 +1,6 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
@@ -39,6 +38,12 @@ android {
         kotlinCompilerExtensionVersion = "1.5.4"
     }
 
+    // 🔥 THIS IS THE IMPORTANT PART
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
     kotlinOptions {
         jvmTarget = "17"
     }
@@ -51,26 +56,28 @@ android {
 }
 
 dependencies {
+
+    // AppCompat (for XML theme safety)
+    implementation("androidx.appcompat:appcompat:1.7.0")
+
     // Compose BOM
     implementation(platform(libs.compose.bom))
-    
-    // Core Android
+
+    // Core
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
 
-    // Compose
+    // Compose UI
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
 
-    // Testing
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.ui.test.junit4)
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    // Debug / Testing
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 }

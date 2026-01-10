@@ -1,135 +1,211 @@
-package com.moodlens.ui.screens.history
+package com.mcn.moodlens.ui.screens.history
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.Bedtime
+import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mcn.moodlens.firestore.FirestoreManager
+import com.mcn.moodlens.firestore.MoodEntry
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.Locale
-
-@Composable
-fun HistoryScreen() {
-    // Sample mood history data
-    val moodHistory = remember {
-        listOf(
-            MoodEntry("2023-11-01", "😄", "Had a great day at work!"),
-            MoodEntry("2023-10-31", "😔", "Not feeling the best today"),
-            MoodEntry("2023-10-30", "🙂", "Good day overall"),
-            MoodEntry("2023-10-29", "😐", "Meh"),
-            MoodEntry("2023-10-28", "😣", "Tough day")
-        )
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-    ) {
-        // Title
-        Text(
-            text = "Your Mood History",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-
-        // Mood history list
-        if (moodHistory.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "No mood entries yet.\nCheck in with yourself!",
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(moodHistory) { entry ->
-                    MoodHistoryItem(entry = entry)
-                }
-            }
-        }
-    }
-}
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MoodHistoryItem(entry: MoodEntry) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = { /* Optional click */ }
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(16.dp)
-        ) {
-            // Mood emoji
-            Text(
-                text = entry.emoji,
-                style = MaterialTheme.typography.displaySmall,
-                modifier = Modifier.padding(end = 16.dp)
-            )
+fun HistoryScreen() {
 
-            Column {
-                // Date row
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.CalendarToday,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = formatDate(entry.date),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+    val firestoreManager = remember { FirestoreManager() }
+    val scope = rememberCoroutineScope()
+
+    var history by remember { mutableStateOf<List<MoodEntry>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
+    var errorMsg by remember { mutableStateOf<String?>(null) }
+
+    fun formatDate(timestamp: Long): String {
+        return try {
+            val sdf = SimpleDateFormat("dd MMM yyyy • hh:mm a", Locale.getDefault())
+            sdf.format(Date(timestamp))
+        } catch (e: Exception) {
+            "Unknown"
+        }
+    }
+
+    fun loadHistory() {
+        scope.launch {
+            isLoading = true
+            errorMsg = null
+
+            val result = firestoreManager.getMoodHistory()
+
+            isLoading = false
+            result.onSuccess { list ->
+                history = list
+            }.onFailure { e ->
+                errorMsg = e.message ?: "Failed to load mood history"
+            }
+        }
+    }
+
+    // ✅ Load data on screen open
+    LaunchedEffect(Unit) {
+        loadHistory()
+    }
+
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(title = { Text("Mood History") })
+        }
+    ) { padding ->
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(18.dp)
+        ) {
+
+            when {
+                isLoading -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
                 }
 
-                // Note
-                if (entry.note.isNotEmpty()) {
-                    Text(
-                        text = entry.note,
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
+                errorMsg != null -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = errorMsg!!,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+
+                            Button(onClick = { loadHistory() }) {
+                                Text("Retry")
+                            }
+                        }
+                    }
+                }
+
+                history.isEmpty() -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                imageVector = Icons.Default.History,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Text(
+                                "No mood history yet 😅",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                "Save your first check-in from Home screen!",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+
+                else -> {
+                    LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        items(history) { entry ->
+                            HistoryCard(entry = entry, formatDate = ::formatDate)
+                        }
+                    }
                 }
             }
         }
     }
 }
 
-private fun formatDate(dateString: String): String {
-    return try {
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val date = inputFormat.parse(dateString) ?: return dateString
+@Composable
+private fun HistoryCard(
+    entry: MoodEntry,
+    formatDate: (Long) -> String
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        elevation = CardDefaults.cardElevation(2.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
 
-        val outputFormat = SimpleDateFormat("EEEE, MMM d", Locale.getDefault())
-        outputFormat.format(date)
-    } catch (e: Exception) {
-        dateString
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = entry.mood,
+                    style = MaterialTheme.typography.headlineMedium
+                )
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = formatDate(entry.timestamp),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+
+                    if (entry.note.isNotBlank()) {
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = entry.note,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                StatChip("Stress", Icons.Default.LocalFireDepartment, entry.stress)
+                StatChip("Energy", Icons.Default.Bolt, entry.energy)
+                StatChip("Sleep", Icons.Default.Bedtime, entry.sleep)
+            }
+        }
     }
 }
 
-data class MoodEntry(
-    val date: String,
-    val emoji: String,
-    val note: String
-)
+@Composable
+private fun StatChip(
+    label: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    value: Int
+) {
+    Surface(
+        shape = MaterialTheme.shapes.medium,
+        tonalElevation = 1.dp,
+        color = MaterialTheme.colorScheme.surfaceVariant
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(icon, contentDescription = null, modifier = Modifier.size(16.dp))
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(
+                text = "$label: $value%",
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Medium
+            )
+        }
+    }
+}

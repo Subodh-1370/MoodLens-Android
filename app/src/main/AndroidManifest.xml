@@ -11,10 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MoodLens"
-        tools:targetApi="31">
+        android:enableOnBackInvokedCallback="true"
+        tools:targetApi="33">
 
         <activity
-            android:name="com.mcn.moodlens.MainActivity"
+            android:name="com.moodlens.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.MoodLens">
 

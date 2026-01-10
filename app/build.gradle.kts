@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -15,9 +16,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        vectorDrawables { useSupportLibrary = true }
     }
 
     buildTypes {
@@ -35,10 +34,9 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
 
-    // 🔥 THIS IS THE IMPORTANT PART
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -49,21 +47,19 @@ android {
     }
 
     packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+        resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" }
     }
 }
 
 dependencies {
 
-    // AppCompat (for XML theme safety)
+    // AppCompat (for theme safety / compatibility)
     implementation("androidx.appcompat:appcompat:1.7.0")
 
     // Compose BOM
     implementation(platform(libs.compose.bom))
 
-    // Core
+    // Core Android
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
@@ -77,7 +73,18 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
-    // Debug / Testing
+    // ✅ Firebase BOM (manages all firebase versions automatically)
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+
+    // ✅ Firebase Auth + Firestore + Storage (KTX versions)
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
+
+    // (Optional but recommended: helps Firebase logging / analytics)
+    implementation("com.google.firebase:firebase-analytics-ktx")
+
+    // Debug
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 }

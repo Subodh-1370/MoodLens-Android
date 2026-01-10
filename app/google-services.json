@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "687410007354",
+    "project_id": "moodlens-c6054",
+    "storage_bucket": "moodlens-c6054.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:687410007354:android:24cfcb7366e978ffc05403",
+        "android_client_info": {
+          "package_name": "com.mcn.moodlens"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfECQvbcsknrZ_cDzMOMfvuc9rG1msz6I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

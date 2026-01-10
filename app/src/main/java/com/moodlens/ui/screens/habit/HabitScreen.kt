@@ -12,6 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+data class Habit(
+    val name: String,
+    val emoji: String
+)
+
 @Composable
 fun HabitScreen() {
     val habits = remember {
@@ -29,15 +34,14 @@ fun HabitScreen() {
     ) {
         Text(
             text = "Today's Habits",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(bottom = 24.dp)
+            style = MaterialTheme.typography.headlineMedium
         )
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+        Spacer(modifier = Modifier.height(20.dp))
+
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             items(habits) { habit ->
-                HabitItem(habit = habit)
+                HabitItem(habit)
             }
         }
     }
@@ -47,50 +51,27 @@ fun HabitScreen() {
 fun HabitItem(habit: Habit) {
     var isChecked by remember { mutableStateOf(false) }
 
-    Surface(
-        shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    Card(modifier = Modifier.fillMaxWidth()) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = habit.emoji,
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(end = 16.dp)
-            )
+            Text(text = habit.emoji, style = MaterialTheme.typography.headlineMedium)
+
+            Spacer(modifier = Modifier.width(16.dp))
 
             Text(
                 text = habit.name,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyLarge
             )
 
             IconButton(onClick = { isChecked = !isChecked }) {
                 Icon(
-                    imageVector = if (isChecked)
-                        Icons.Filled.CheckCircle
-                    else
-                        Icons.Outlined.RadioButtonUnchecked,
-                    contentDescription = if (isChecked)
-                        "Mark as incomplete"
-                    else
-                        "Mark as complete",
-                    tint = if (isChecked)
-                        MaterialTheme.colorScheme.primary
-                    else
-                        MaterialTheme.colorScheme.onSurfaceVariant
+                    imageVector = if (isChecked) Icons.Filled.CheckCircle else Icons.Outlined.RadioButtonUnchecked,
+                    contentDescription = null
                 )
             }
         }
     }
 }
-
-data class Habit(
-    val name: String,
-    val emoji: String
-)

@@ -53,7 +53,6 @@ The project follows a **clean, modular structure** and is **MVVM-ready**.
 - **Model Layer**: Data classes representing mood entries and habits  
 - **ViewModel Layer**: Prepared for future business logic and state handling  
 
-> Note: Backend, Firebase, and AI integrations are intentionally excluded at this stage to keep the project focused on UI and architecture.
 
 ---
 
@@ -106,7 +105,6 @@ app/src/main/java/com/mcn/moodlens/
 3. Select an emulator or physical device
 4. Click **Run ▶**
 
-> VS Code is used for code editing, while Android Studio is used for building and running the app.
 
 ---
 

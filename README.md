@@ -1,8 +1,9 @@
 # 🌟 MoodLens – Android
 
-MoodLens is a **modern Android application** built using **Kotlin** and **Jetpack Compose**, focused on helping users **track their daily mood and habits** through a clean, minimal, and Gen-Z–friendly user interface.
+MoodLens is a Firebase-powered Android application that helps users track their daily emotional state through quick mood check-ins, simple notes, and wellbeing metrics like stress, energy, and sleep quality.
+Built using Kotlin and Jetpack Compose, the app focuses on delivering a clean, fast, and Gen-Z friendly UI, while maintaining a scalable architecture for future expansions like insights, charts, and habit consistency tracking.
 
-This project is developed as part of a **mobile application ideation and development task**, with emphasis on **UI design, architecture understanding, and clean project structure**.
+This project was developed as part of a mobile ideation & development task, highlighting real-world Android development practices including authentication, Firestore integration, UI/UX design, and structured app architecture.
 
 ---
 
@@ -105,7 +106,6 @@ app/src/main/java/com/mcn/moodlens/
 3. Select an emulator or physical device
 4. Click **Run ▶**
 
-
 ---
 
 ---
@@ -123,6 +123,11 @@ This project includes complete architecture documentation in a single PDF file c
 
 ⬇️ **Direct Download:**  
 [Download MoodLens_Architecture_v2.pdf](https://github.com/Subodh-1370/MoodLens-Android/raw/main/diagrams/MoodLens_Architecture_v2.pdf)
+
+---
+
+## 🎥 Demo Video
+📌 Watch Video: [Click here](https://github.com/Subodh-1370/MoodLens-Android/releases/download/v1.0/Screen.Recording.2026-01-11.150807.mp4)
 
 ---
 

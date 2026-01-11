@@ -120,6 +120,9 @@ This project includes complete architecture documentation in a single PDF file c
 - ✅ DRD (Firestore Data Relationship Diagram)
 - ✅ User Journey / Flow Diagram
 
+📄 **View in GitHub:**  
+[MoodLens Architecture PDF](diagrams/MoodLens_Architecture_v2.pdf)
+
 ⬇️ **Direct Download:**  
 [Download MoodLens_Architecture_v2.pdf](https://github.com/Subodh-1370/MoodLens-Android/raw/main/diagrams/MoodLens_Architecture_v2.pdf)
 

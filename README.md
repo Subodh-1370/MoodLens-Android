@@ -127,7 +127,7 @@ This project includes complete architecture documentation in a single PDF file c
 ---
 
 ## 🎥 Demo Video
-📌 Watch Video: [Click here](https://github.com/Subodh-1370/MoodLens-Android/releases/download/v1.0/Screen.Recording.2026-01-11.150807.mp4)
+📌Download / Watch Video: [Click here](https://github.com/Subodh-1370/MoodLens-Android/releases/download/v1.0/Screen.Recording.2026-01-11.150807.mp4)
 
 ---
 

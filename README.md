@@ -110,13 +110,19 @@ app/src/main/java/com/mcn/moodlens/
 
 ---
 
-## 📊 Diagrams
+---
 
-The project includes architecture and flow diagrams:
+## 📊 Architecture Diagrams (PDF)
 
-- 📌 **ERD** – Entity Relationship Diagram  
-- 📌 **DRD** – Data Relationship Diagram  
-- 📌 **User Flow Diagram**
+This project includes complete architecture documentation in a single PDF file containing:
 
-These are available in the `diagrams/` folder.
+- ✅ ERD (Entity Relationship Diagram)
+- ✅ DRD (Firestore Data Relationship Diagram)
+- ✅ User Journey / Flow Diagram
+
+⬇️ **Direct Download:**  
+[Download MoodLens_Architecture_v2.pdf](https://github.com/Subodh-1370/MoodLens-Android/raw/main/diagrams/MoodLens_Architecture_v2.pdf)
+
+---
+
 
